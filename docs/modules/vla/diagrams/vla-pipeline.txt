@@ -1,0 +1,143 @@
+# VLA Pipeline Diagram Description
+
+## Main VLA Pipeline
+
+```
+┌─────────────────┐    ┌──────────────────┐    ┌──────────────────┐
+│   Voice Input   │    │  Language &      │    │    Action &      │
+│   Processing    │───▶│  Planning Layer  │───▶│  Execution Layer │
+│                 │    │                  │    │                  │
+│  - Speech Rec.  │    │  - LLM Interface │    │  - Motion Plan.  │
+│  - ASR System   │    │  - Task Plann.   │    │  - Control Sys.  │
+│  - Noise Hand.  │    │  - Intent Ex.    │    │  - Robot Driver  │
+└─────────────────┘    └──────────────────┘    └──────────────────┘
+                              ▲
+                              │
+                              ▼
+                    ┌──────────────────┐
+                    │   Perception     │
+                    │   & Sensing      │
+                    │                  │
+                    │  - Vision Sys.   │
+                    │  - Depth Sens.   │
+                    │  - Object Det.   │
+                    │  - Scene Und.    │
+                    └──────────────────┘
+```
+
+## Voice→Plan→Act Loop
+
+```
+Voice Command: "Pick up the red block"
+         │
+         ▼
+┌─────────────────┐
+│  Speech Recog.  │
+│  - Convert to   │
+│  text: "Pick up │
+│  the red block" │
+└─────────────────┘
+         │
+         ▼
+┌─────────────────┐
+│  NLU & Intent   │
+│  Extraction     │
+│  - Intent: Pick │
+│  - Object: red  │
+│  block          │
+└─────────────────┘
+         │
+         ▼
+┌─────────────────┐
+│  Cognitive      │
+│  Planning       │
+│  - Navigate to  │
+│  block location │
+│  - Plan grasp   │
+│  - Execute      │
+└─────────────────┘
+         │
+         ▼
+┌─────────────────┐
+│  Action         │
+│  Execution      │
+│  - Move to      │
+│  location       │
+│  - Grasp block  │
+│  - Confirm      │
+└─────────────────┘
+         │
+         ▼
+┌─────────────────┐
+│  Perception     │
+│  Feedback       │
+│  - Confirm      │
+│  grasp success  │
+│  - Update env.  │
+│  model          │
+└─────────────────┘
+         │
+         └───────── Return to Planning if needed
+```
+
+## Component Interaction Flow
+
+```
+┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+│   Voice     │    │  Cognitive  │    │  Action     │
+│  Processing │───▶│   Planner   │───▶│  Executor   │
+│             │    │             │    │             │
+│  - Whisper  │    │  - LLM      │    │  - ROS 2    │
+│  - Transcr. │    │  - Planning │    │  - Control  │
+└─────────────┘    │  - Safety   │    │  - Feedback │
+                   └─────────────┘    └─────────────┘
+                          │                   │
+                          ▼                   ▼
+                   ┌─────────────┐    ┌─────────────┐
+                   │  Perception │    │  Robot      │
+                   │             │    │             │
+                   │  - Vision   │    │  - Hardware │
+                   │  - Object   │    │  - Sensors  │
+                   │  Detection  │    │             │
+                   └─────────────┘    └─────────────┘
+```
+
+## Detailed Voice-to-Action Process
+
+```
+Spoken Command: "Please pick up the red block from the table"
+
+Step 1: Voice Processing
+┌─────────────────────────────────────────────────────────────┐
+│ Audio Input → Noise Reduction → Speech Recognition → Text  │
+│ "Please pick up the red block from the table"              │
+└─────────────────────────────────────────────────────────────┘
+
+Step 2: Language Understanding
+┌─────────────────────────────────────────────────────────────┐
+│ Text → Tokenization → Intent Recognition → Entity Extraction│
+│ Intent: GRASP_OBJECT                                        │
+│ Entities: {object: "red block", location: "table"}         │
+└─────────────────────────────────────────────────────────────┘
+
+Step 3: Task Planning
+┌─────────────────────────────────────────────────────────────┐
+│ Intent + Entities → Task Decomposition → Action Sequence   │
+│ 1. NAVIGATE(location="table")                              │
+│ 2. PERCEIVE(object="red block")                            │
+│ 3. PLAN_GRASP(object="red block")                          │
+│ 4. EXECUTE_GRASP(object="red block")                       │
+└─────────────────────────────────────────────────────────────┘
+
+Step 4: Action Execution
+┌─────────────────────────────────────────────────────────────┐
+│ Action Sequence → ROS 2 Commands → Robot Execution         │
+│ Execute each action with feedback and error handling       │
+└─────────────────────────────────────────────────────────────┘
+
+Step 5: Perception Feedback
+┌─────────────────────────────────────────────────────────────┐
+│ Environment → Sensors → Processing → Updated State         │
+│ Confirm success / Handle errors / Update world model       │
+└─────────────────────────────────────────────────────────────┘
+```

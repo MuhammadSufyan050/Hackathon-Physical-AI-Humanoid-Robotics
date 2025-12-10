@@ -1,0 +1,113 @@
+# Docusaurus documentation
+.node_modules/
+.build/
+.dist/
+.bundle/
+.docusaurus/
+.temp/
+.cache/
+
+# Docusaurus generated files
+docs/api/**
+!docs/api/README.md
+docs/blog/20[0-9][0-9]-[0-1][0-9]-[0-3][0-9]-*/
+docs/blog/20[0-9][0-9]/[0-1][0-9]/[0-3][0-9].md
+
+# Docusaurus deployment
+.deploy/
+out/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp/
+.pnp.js
+.next/
+.nuxt/
+
+# Build outputs
+build/
+dist/
+public/
+coverage/
+.nyc_output/
+
+# Environment variables
+.env*
+!.env.example
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Python (if using for any scripts)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+npm-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+lib-cov/
+
+# Dependency directories
+jspm_packages/
+
+# TypeScript
+*.tsbuildinfo
+*.ac.ts
+*.am.ts
+*.as.ts
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# ROS 2 related (if needed for development)
+*.log
+*.log.*
+*.bag
+*.db3
+*.db
+.deps/
+build/
+install/
+log/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup

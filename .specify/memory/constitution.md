@@ -1,55 +1,65 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Version change: 0.1.0 (assumed initial) -> 0.2.0
+Modified principles:
+  - [PRINCIPLE_1_NAME] -> Technical Accuracy
+  - [PRINCIPLE_2_NAME] -> Clear Teaching
+  - [PRINCIPLE_3_NAME] -> Source-Verifiable Claims
+  - [PRINCIPLE_4_NAME] -> Consistent Modular Structure
+  - [PRINCIPLE_5_NAME] -> Grounded Chatbot Responses
+Added sections:
+  - Key Standards
+  - Constraints
+  - Success Criteria
+Removed sections:
+  - None
+Templates requiring updates:
+  - .specify/templates/plan-template.md (⚠ pending)
+  - .specify/templates/spec-template.md (⚠ pending)
+  - .specify/templates/tasks-template.md (⚠ pending)
+  - .specify/templates/commands/*.md (⚠ pending)
+Follow-up TODOs:
+  - TODO(RATIFICATION_DATE): Original adoption date
+-->
+# AI/Robotics Book + Embedded RAG Chatbot Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Technical Accuracy
+ROS 2, Gazebo, Unity, Isaac Sim, VLA concepts must be correct and citable.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Clear Teaching
+Content must be clear and accessible for undergraduate robotics learners (Flesch-Kincaid ~10–14).
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Source-Verifiable Claims
+All claims and facts presented in the book must be traceable to a reliable source.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+<h3>IV. Consistent Modular Structure</h3>
+Follow Docusaurus + Spec-Kit Plus conventions for consistent organization and modularity.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+<h3>V. Grounded Chatbot Responses</h3>
+Chatbot responses MUST only be derived from the book text; no external knowledge or generated content.
 
-### [PRINCIPLE_6_NAME]
+## Key Standards
 
+- Follow Docusaurus + Spec-Kit Plus conventions.
+- All robotics concepts must be correct and citable.
+- Code samples must be runnable (Python/ROS 2/FastAPI).
+- Chatbot must restrict answers to retrieved context.
 
-[PRINCIPLE__DESCRIPTION]
+## Constraints
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+- 10–14 chapters covering ROS2, Gazebo/Unity, Isaac, VLA, Capstone.
+- Include diagrams, URDF, sensor models, workflows.
+- Deploy book on GitHub Pages; deploy RAG backend publicly.
+- Writing level: undergraduate robotics (Flesch-Kincaid ~10–14).
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+## Success Criteria
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
-
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+- Book fully published and reproducible.
+- RAG chatbot returns only grounded responses from book text.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution supersedes all other practices. Amendments require documentation, approval, and a migration plan. All PRs/reviews must verify compliance. Complexity must be justified. Use relevant guidance files for runtime development guidance.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 0.2.0 | **Ratified**: TODO(RATIFICATION_DATE) | **Last Amended**: 2025-12-07

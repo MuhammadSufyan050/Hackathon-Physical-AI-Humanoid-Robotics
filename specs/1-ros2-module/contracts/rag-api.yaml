@@ -1,0 +1,388 @@
+openapi: 3.0.0
+info:
+  title: Robotics Handbook RAG API
+  description: API for the Retrieval-Augmented Generation system that powers the robotics handbook chatbot
+  version: 1.0.0
+  contact:
+    name: Robotics Handbook Team
+    email: team@robotics-handbook.example.com
+
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+  - url: https://rag-api.robotics-handbook.com
+    description: Production server
+
+paths:
+  /api/rag/query:
+    post:
+      summary: Query the RAG system for information from the robotics handbook
+      description: Submit a natural language query and receive a contextually relevant response based on the robotics handbook content
+      operationId: queryRAG
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryRequest'
+            example:
+              query: "Explain how ROS 2 nodes communicate with each other"
+              context_window: 2048
+              max_tokens: 512
+      responses:
+        '200':
+          description: Successful response with answer and source information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryResponse'
+              example:
+                answer: "ROS 2 nodes communicate through a publish-subscribe model using topics..."
+                sources:
+                  - module: "module-1-ros2"
+                    chapter: "nodes-topics-services"
+                    section: "node-communication"
+                    confidence: 0.95
+                query_time: 0.15
+        '400':
+          description: Bad request - invalid query parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/rag/validate:
+    post:
+      summary: Validate that a response is grounded in handbook content
+      description: Check if a given response is properly grounded in the robotics handbook content without hallucinations
+      operationId: validateResponse
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidationRequest'
+            example:
+              response: "ROS 2 uses a master-slave architecture for communication"
+              query: "How does ROS 2 handle communication?"
+      responses:
+        '200':
+          description: Validation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResponse'
+        '400':
+          description: Bad request - invalid validation parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/rag/status:
+    get:
+      summary: Get the health status of the RAG system
+      description: Check if the RAG system is running and all dependencies are available
+      operationId: getStatus
+      responses:
+        '200':
+          description: System is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+        '503':
+          description: System is not ready
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+
+  /api/rag/index:
+    post:
+      summary: Index new content into the vector database
+      description: Add new handbook content to the vector database for retrieval
+      operationId: indexContent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IndexRequest'
+      responses:
+        '200':
+          description: Content successfully indexed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IndexResponse'
+        '400':
+          description: Bad request - invalid content format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    QueryRequest:
+      type: object
+      required:
+        - query
+      properties:
+        query:
+          type: string
+          description: The natural language query to answer
+          example: "How do I create a publisher in ROS 2 using Python?"
+        context_window:
+          type: integer
+          description: Maximum context window size in tokens
+          default: 2048
+          minimum: 512
+          maximum: 4096
+        max_tokens:
+          type: integer
+          description: Maximum number of tokens in the response
+          default: 512
+          minimum: 128
+          maximum: 1024
+        module_filter:
+          type: string
+          description: Optional filter to limit search to specific module
+          example: "module-1-ros2"
+        temperature:
+          type: number
+          description: Temperature for response generation (0.0 to 1.0)
+          default: 0.3
+          minimum: 0.0
+          maximum: 1.0
+
+    QueryResponse:
+      type: object
+      required:
+        - answer
+        - sources
+        - query_time
+      properties:
+        answer:
+          type: string
+          description: The generated answer based on handbook content
+          example: "To create a publisher in ROS 2 using Python, you first need to import rclpy..."
+        sources:
+          type: array
+          description: List of source documents used to generate the answer
+          items:
+            $ref: '#/components/schemas/SourceReference'
+        query_time:
+          type: number
+          description: Time taken to process the query in seconds
+          example: 0.15
+        confidence:
+          type: number
+          description: Overall confidence in the response (0.0 to 1.0)
+          minimum: 0.0
+          maximum: 1.0
+
+    SourceReference:
+      type: object
+      required:
+        - module
+        - chapter
+        - section
+        - confidence
+      properties:
+        module:
+          type: string
+          description: The module containing the source content
+          example: "module-1-ros2"
+        chapter:
+          type: string
+          description: The chapter containing the source content
+          example: "python-agent-integration"
+        section:
+          type: string
+          description: The specific section containing the source content
+          example: "creating-publisher-nodes"
+        content_snippet:
+          type: string
+          description: A snippet of the source content
+          example: "To create a publisher, use the create_publisher method..."
+        confidence:
+          type: number
+          description: Confidence in the relevance of this source (0.0 to 1.0)
+          minimum: 0.0
+          maximum: 1.0
+
+    ValidationRequest:
+      type: object
+      required:
+        - response
+        - query
+      properties:
+        response:
+          type: string
+          description: The response to validate for grounding
+          example: "ROS 2 nodes communicate through topics using publisher-subscriber pattern"
+        query:
+          type: string
+          description: The original query that generated the response
+          example: "How do ROS 2 nodes communicate?"
+
+    ValidationResponse:
+      type: object
+      required:
+        - is_valid
+        - confidence
+        - issues
+      properties:
+        is_valid:
+          type: boolean
+          description: Whether the response is properly grounded in handbook content
+          example: true
+        confidence:
+          type: number
+          description: Confidence in the validation result (0.0 to 1.0)
+          minimum: 0.0
+          maximum: 1.0
+        issues:
+          type: array
+          description: List of validation issues found
+          items:
+            type: string
+          example: ["Potential hallucination: 'master-slave architecture' not found in handbook"]
+
+    StatusResponse:
+      type: object
+      required:
+        - status
+        - timestamp
+      properties:
+        status:
+          type: string
+          description: Overall system status
+          enum: [healthy, degraded, unavailable]
+          example: "healthy"
+        timestamp:
+          type: string
+          format: date-time
+          description: Time when status was checked
+          example: "2025-12-10T10:30:00Z"
+        services:
+          type: object
+          description: Status of individual services
+          additionalProperties:
+            type: string
+            enum: [up, down, degraded]
+          example:
+            vector_db: "up"
+            embedding_service: "up"
+            api_server: "up"
+
+    IndexRequest:
+      type: object
+      required:
+        - content
+        - source_id
+      properties:
+        content:
+          type: string
+          description: The content to index
+          example: "Chapter on ROS 2 Nodes, Topics, and Services..."
+        source_id:
+          type: string
+          description: Unique identifier for the source content
+          example: "module-1-ros2/chapter-2"
+        metadata:
+          type: object
+          description: Additional metadata about the content
+          properties:
+            module:
+              type: string
+              example: "module-1-ros2"
+            chapter:
+              type: string
+              example: "nodes-topics-services"
+            title:
+              type: string
+              example: "Nodes, Topics, and Services"
+            author:
+              type: string
+              example: "ROS Expert"
+
+    IndexResponse:
+      type: object
+      required:
+        - indexed_chunks
+        - status
+      properties:
+        indexed_chunks:
+          type: integer
+          description: Number of content chunks indexed
+          example: 24
+        status:
+          type: string
+          description: Status of the indexing operation
+          enum: [success, partial, failed]
+          example: "success"
+        errors:
+          type: array
+          description: List of errors during indexing (if any)
+          items:
+            type: string
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error code
+          example: "BAD_REQUEST"
+        message:
+          type: string
+          description: Human-readable error message
+          example: "Invalid query parameters provided"
+        details:
+          type: object
+          description: Additional error details
+          additionalProperties: true
+
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: X-API-Key
+      in: header
+      description: API key for authentication
+
+security:
+  - api_key: []
+
+tags:
+  - name: rag
+    description: RAG (Retrieval-Augmented Generation) operations
+  - name: validation
+    description: Response validation operations
+  - name: health
+    description: Health and status checks
+  - name: indexing
+    description: Content indexing operations

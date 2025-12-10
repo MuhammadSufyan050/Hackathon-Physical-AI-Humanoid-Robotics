@@ -1,0 +1,191 @@
+# OpenAPI Specification: AI-Robot Brain Module Content API
+
+openapi: 3.0.0
+info:
+  title: AI-Robot Brain Module Content API
+  description: Educational content API for the AI-Robot Brain Module covering NVIDIA Isaac tools
+  version: 1.0.0
+
+paths:
+  /modules/ai-robot-brain/chapter-1:
+    get:
+      summary: Get Isaac Sim Fundamentals content
+      description: Retrieve educational content about Isaac Sim installation, basic scene setup, and synthetic data generation
+      responses:
+        '200':
+          description: Chapter content successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  chapter_title:
+                    type: string
+                    example: "Isaac Sim Fundamentals"
+                  content:
+                    type: string
+                    example: "This chapter covers the fundamentals of Isaac Sim for photorealistic simulation..."
+                  examples:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          example: "Isaac Sim Configuration"
+                        code:
+                          type: string
+                          example: "Isaac Sim scene configuration file content"
+                  diagrams:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                          example: "Synthetic Data Generation Workflow"
+                        description:
+                          type: string
+                          example: "Shows the flow of synthetic data generation in Isaac Sim"
+              example:
+                chapter_title: "Isaac Sim Fundamentals"
+                content: "This chapter covers the fundamentals of Isaac Sim for photorealistic simulation and synthetic data generation..."
+                examples:
+                  - type: "Isaac Sim Configuration"
+                    code: |
+                      {
+                        "scene": {
+                          "name": "basic_scene",
+                          "objects": [...],
+                          "lighting": {...}
+                        }
+                      }
+                diagrams:
+                  - title: "Synthetic Data Generation Workflow"
+                    description: "Shows the flow of synthetic data generation in Isaac Sim"
+
+  /modules/ai-robot-brain/chapter-2:
+    get:
+      summary: Get Isaac ROS and VSLAM content
+      description: Retrieve educational content about Isaac ROS perception pipeline and hardware-accelerated VSLAM
+      responses:
+        '200':
+          description: Chapter content successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  chapter_title:
+                    type: string
+                    example: "Isaac ROS and VSLAM"
+                  content:
+                    type: string
+                    example: "This chapter covers Isaac ROS for hardware-accelerated VSLAM and perception..."
+                  examples:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          example: "Isaac ROS Graph Configuration"
+                        code:
+                          type: string
+                          example: "Isaac ROS node graph configuration"
+                  diagrams:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                          example: "Perception Pipeline"
+                        description:
+                          type: string
+                          example: "Shows the flow of visual data through the perception pipeline"
+
+  /modules/ai-robot-brain/chapter-3:
+    get:
+      summary: Get Nav2 Navigation content
+      description: Retrieve educational content about Nav2 navigation stack and humanoid path planning
+      responses:
+        '200':
+          description: Chapter content successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  chapter_title:
+                    type: string
+                    example: "Nav2 Navigation"
+                  content:
+                    type: string
+                    example: "This chapter covers Nav2 navigation stack for humanoid robot path planning..."
+                  examples:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          example: "Nav2 Configuration"
+                        code:
+                          type: string
+                          example: "Nav2 parameter configuration file"
+                  diagrams:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                        description:
+                          type: string
+
+  /modules/ai-robot-brain/examples:
+    get:
+      summary: Get example configurations for the AI-Robot Brain module
+      description: Retrieve example configurations for Isaac Sim scenes, VSLAM pipelines, and navigation systems
+      responses:
+        '200':
+          description: Examples successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isaac_sim_scenes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        description:
+                          type: string
+                        configuration:
+                          type: string
+                  vslam_pipelines:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        description:
+                          type: string
+                        configuration:
+                          type: string
+                  navigation_configs:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        type:
+                          type: string
+                        configuration:
+                          type: string

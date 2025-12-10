@@ -1,0 +1,168 @@
+# Voice→Plan→Act Pipeline Diagrams
+
+## 1. Basic Voice→Plan→Act Flow
+
+```
+┌─────────────────┐    ┌──────────────────┐    ┌──────────────────┐
+│   Voice Input   │    │  Cognitive       │    │    Action        │
+│   Processing    │───▶│  Planning        │───▶│  Execution       │
+│                 │    │                  │    │                  │
+│  - Speech Rec.  │    │  - Intent Extr.  │    │  - Motion Plan.  │
+│  - ASR System   │    │  - Task Plan.    │    │  - Control Sys.  │
+│  - Transcr.     │    │  - Context A.    │    │  - Robot Driver  │
+└─────────────────┘    └──────────────────┘    └──────────────────┘
+         │                       │                       │
+         ▼                       ▼                       ▼
+┌─────────────────┐    ┌──────────────────┐    ┌──────────────────┐
+│  Audio Signal   │    │  Structured      │    │  Executable      │
+│                 │    │  Command         │    │  Actions         │
+│  "Pick up the  │    │  Intent: GRASP   │    │  1. NAVIGATE()   │
+│  red block"     │    │  Object: red    │    │  2. PERCEIVE()   │
+│                 │    │  block          │    │  3. GRASP()      │
+└─────────────────┘    │  Location: here │    │  4. CONFIRM()    │
+                       └──────────────────┘    └──────────────────┘
+```
+
+## 2. Detailed Voice→Plan→Act Process
+
+```
+Step 1: Voice Input          Step 2: Cognitive Planning       Step 3: Action Execution
+┌─────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐
+│ Spoken Command:         │  │                             │  │                             │
+│ "Please pick up the     │  │ Intent Recognition:         │  │ Action Sequence Execution:  │
+│ red block from the      │  │ • Intent: GRASP_OBJECT      │  │ • NAVIGATE to location      │
+│ table"                  │  │ • Object: red block         │  │ • PERCEIVE object           │
+│                         │  │ • Location: table           │  │ • PLAN_GRASP strategy       │
+│ Audio → Text:           │  │                             │  │ • EXECUTE_GRASP             │
+│ "Please pick up the     │  │ Task Decomposition:         │  │ • CONFIRM success           │
+│ red block from the      │  │ • Navigate to table         │  │                             │
+│ table" (conf: 0.92)     │  │ • Locate red block          │  │                             │
+│                         │  │ • Plan grasp approach       │  │                             │
+│                         │  │ • Execute grasp             │  │                             │
+└─────────────────────────┘  │ • Confirm success           │  └─────────────────────────────┘
+                       │     └─────────────────────────────┘  │
+                       └───────────────────────────────────────┘
+```
+
+## 3. VLA Pipeline with Feedback Loops
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                                    VOICE INPUT                                  │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────────┐   │
+│  │ Microphone  │───▶│ Preprocess  │───▶│ Whisper ASR │───▶│ Text Output     │   │
+│  │             │    │             │    │             │    │                 │   │
+│  │ Audio Input │    │ Noise Red.  │    │ Speech →    │    │ "Pick up the   │   │
+│  │             │    │ Enhance     │    │ Text        │    │ red block"      │   │
+│  └─────────────┘    └─────────────┘    └─────────────┘    └─────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────────────┘
+                                           │
+                                           ▼
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                                 COGNITIVE PLANNING                              │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────────┐   │
+│  │ Intent      │───▶│ Entity      │───▶│ Task        │───▶│ Action          │   │
+│  │ Recognition │    │ Extraction  │    │ Decomposit. │    │ Sequence        │   │
+│  │             │    │             │    │             │    │                 │   │
+│  │ GRASP_OBJ   │    │ • Object:   │    │ • NAVIGATE  │    │ • NAVIGATE()    │   │
+│  │             │    │   red block │    │ • PERCEIVE  │    │ • PERCEIVE()    │   │
+│  └─────────────┘    │ • Location: │    │ • GRASP     │    │ • GRASP()       │   │
+│                     │   table     │    │ • CONFIRM   │    │ • CONFIRM()     │   │
+│                     └─────────────┘    └─────────────┘    └─────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────────────┘
+                                           │
+                                           ▼
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                                ACTION EXECUTION                                 │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────────┐   │
+│  │ Navigation  │───▶│ Perception  │───▶│ Manipulation│───▶│ Confirmation    │   │
+│  │             │    │             │    │             │    │                 │   │
+│  │ Move to     │    │ Detect red  │    │ Grasp block │    │ Verify grasp    │   │
+│  │ table loc.  │    │ block       │    │             │    │ success         │   │
+│  └─────────────┘    └─────────────┘    └─────────────┘    └─────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────────────┘
+                                           │
+                                           ▼
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                                FEEDBACK LOOP                                    │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────────┐   │
+│  │ Perception  │───▶│ State       │───▶│ Plan        │───▶│ Adjust Plan     │   │
+│  │             │    │ Update      │    │ Monitoring  │    │                 │   │
+│  │ Confirm     │    │ Environment │    │ Action      │    │ Modify action   │   │
+│  │ grasp       │    │ state       │    │ success     │    │ if needed       │   │
+│  │ success     │    │ updated     │    │             │    │                 │   │
+│  └─────────────┘    └─────────────┘    └─────────────┘    └─────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────────────┘
+```
+
+## 4. Voice→Plan→Act with LLM Integration
+
+```
+┌─────────────────┐    ┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
+│   Voice Input   │    │  LLM Language    │    │  LLM Action      │    │    Action        │
+│                 │    │  Understanding   │    │  Planning        │    │  Execution       │
+│  "Go to the     │───▶│                  │───▶│                  │───▶│                  │
+│  kitchen and    │    │  - Intent:       │    │  - Task:         │    │  - Navigation    │
+│  bring me the   │    │    COMPLEX_TASK  │    │    NAVIGATE      │    │    to kitchen    │
+│  coffee"        │    │  - Entities:     │    │  - Task:         │    │  - Grasp        │
+│                 │    │    kitchen,      │    │    GRASP_OBJECT  │    │    coffee       │
+│                 │    │    coffee        │    │  - Sequence:     │    │  - Return to     │
+│                 │    │                  │    │    1. NAVIGATE   │    │    user          │
+└─────────────────┘    └──────────────────┘    │    2. GRASP      │    └──────────────────┘
+                                              │    3. RETURN     │
+                                              └──────────────────┘
+```
+
+## 5. Parallel Processing Voice→Plan→Act
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                              PARALLEL PIPELINE                                  │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│  VOICE STREAM                    │  PERCEPTION STREAM              │  CONTROL   │
+│  ┌─────────────┐               │  ┌─────────────┐                │  ┌─────────┐ │
+│  │ Continuous  │               │  │ Real-time   │                │  │ Action  │ │
+│  │ Audio       │───┐           │  │ Environment │───┐            │  │ Execution│ │
+│  │ Capture     │   │           │  │ Sensing     │   │            │  │         │ │
+│  └─────────────┘   │           │  └─────────────┘   │            │  │ Execute │ │
+│                    ▼           │                    ▼            │  │ Actions │ │
+│  ┌─────────────┐  ┌─────────┐ │  ┌─────────────┐  ┌──────────┐  │  └─────────┘ │
+│  │ Voice       │  │ Command │ │  │ Object      │  │ State    │  │              │
+│  │ Activity    │  │ Queue   │ │  │ Detection   │  │ Tracking │  │              │
+│  │ Detection   │  │         │ │  │             │  │          │  │              │
+│  └─────────────┘  └─────────┘ │  └─────────────┘  └──────────┘  │              │
+│                    │           │                    │            │              │
+│                    ▼           │                    ▼            │              │
+│  ┌─────────────┐  ┌─────────┐ │  ┌─────────────┐  ┌──────────┐  │              │
+│  │ Speech      │  │ Plan    │ │  │ Feature     │  │ Context  │  │              │
+│  │ Recognition │  │ Manager │ │  │ Extraction  │  │ Update   │  │              │
+│  │ (Whisper)   │  │         │ │  │             │  │          │  │              │
+│  └─────────────┘  └─────────┘ │  └─────────────┘  └──────────┘  │              │
+└─────────────────────────────────────────────────────────────────────────────────┘
+```
+
+## 6. Error Handling Voice→Plan→Act
+
+```
+┌─────────────────┐    ┌──────────────────┐    ┌──────────────────┐
+│   Voice Input   │    │  Error &         │    │    Action        │
+│   Processing    │───▶│  Validation      │───▶│  Execution       │
+│                 │    │                  │    │                  │
+│  - Speech Rec.  │    │  - Confidence    │    │  - Safe Actions  │
+│  - Confidence   │    │    Check         │    │  - Error Hand.   │
+│  - Validation   │    │  - Ambiguity     │    │  - Recovery      │
+└─────────────────┘    │    Resolution    │    │  - Confirmation  │
+         │              │  - Error         │    └──────────────────┘
+         ▼              │    Recovery      │              │
+┌─────────────────┐    │                  │              ▼
+│  Validation     │    └──────────────────┘    ┌──────────────────┐
+│  Process        │───────────────────────────▶│  Error Recovery  │
+│                 │                            │  Actions         │
+│  • Confidence   │                            │                  │
+│    > Threshold? │                            │  • Retry         │
+│  • Clear        │                            │  • Clarification │
+│    Command?     │                            │  • Alternative   │
+│  • Context      │                            │    Actions       │
+│    Valid?       │                            │  • Abort/Cancel  │
+└─────────────────┘                            └──────────────────┘
+```

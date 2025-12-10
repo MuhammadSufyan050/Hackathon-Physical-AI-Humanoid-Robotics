@@ -1,0 +1,195 @@
+# OpenAPI Specification: Digital Twin Module Content API
+
+openapi: 3.0.0
+info:
+  title: Digital Twin Module Content API
+  description: Educational content API for the Digital Twin Module covering Gazebo and Unity simulation
+  version: 1.0.0
+
+paths:
+  /modules/digital-twin/chapter-1:
+    get:
+      summary: Get Gazebo Physics Fundamentals content
+      description: Retrieve educational content about Gazebo physics simulation, including gravity, collisions, and joint constraints
+      responses:
+        '200':
+          description: Chapter content successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  chapter_title:
+                    type: string
+                    example: "Gazebo Physics Fundamentals"
+                  content:
+                    type: string
+                    example: "This chapter covers the fundamental concepts of physics simulation in Gazebo..."
+                  examples:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          example: "SDF Configuration"
+                        code:
+                          type: string
+                          example: "<sdf>...</sdf>"
+                  diagrams:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                          example: "Physics Pipeline Diagram"
+                        description:
+                          type: string
+                          example: "Shows the flow of physics calculations in Gazebo"
+              example:
+                chapter_title: "Gazebo Physics Fundamentals"
+                content: "This chapter covers the fundamental concepts of physics simulation in Gazebo, including gravity, collision detection, and joint constraints..."
+                examples:
+                  - type: "SDF Configuration"
+                    code: |
+                      <sdf version='1.7'>
+                        <model name='simple_robot'>
+                          <link name='chassis'>
+                            <collision name='collision'>
+                              <geometry>
+                                <box><size>1 1 1</size></box>
+                              </geometry>
+                            </collision>
+                          </link>
+                        </model>
+                      </sdf>
+                diagrams:
+                  - title: "Physics Pipeline Diagram"
+                    description: "Shows the flow of physics calculations in Gazebo"
+
+  /modules/digital-twin/chapter-2:
+    get:
+      summary: Get Unity Environment Design content
+      description: Retrieve educational content about Unity environment creation with high-fidelity visualization
+      responses:
+        '200':
+          description: Chapter content successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  chapter_title:
+                    type: string
+                    example: "Unity Environment Design"
+                  content:
+                    type: string
+                    example: "This chapter covers creating high-fidelity 3D environments in Unity..."
+                  examples:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          example: "Unity Project Layout"
+                        configuration:
+                          type: string
+                          example: "Scene hierarchy and component setup"
+                  diagrams:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                          example: "Unity Interaction Loop"
+                        description:
+                          type: string
+                          example: "Shows the input-processing-rendering-display cycle in Unity"
+
+  /modules/digital-twin/chapter-3:
+    get:
+      summary: Get Sensor Simulation Pipeline content
+      description: Retrieve educational content about simulating LiDAR, depth cameras, and IMUs
+      responses:
+        '200':
+          description: Chapter content successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  chapter_title:
+                    type: string
+                    example: "Sensor Simulation Pipeline"
+                  content:
+                    type: string
+                    example: "This chapter covers simulating key sensors: LiDAR, depth cameras, and IMUs..."
+                  examples:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          example: "Sensor Configuration"
+                        code:
+                          type: string
+                          example: "sensor definition in URDF/SDF"
+                  diagrams:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                        description:
+                          type: string
+
+  /modules/digital-twin/examples:
+    get:
+      summary: Get example configurations for the digital twin module
+      description: Retrieve example configurations for robot models, environments, and sensor setups
+      responses:
+        '200':
+          description: Examples successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  robot_models:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        description:
+                          type: string
+                        configuration:
+                          type: string
+                  environments:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        description:
+                          type: string
+                        configuration:
+                          type: string
+                  sensors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        type:
+                          type: string
+                        configuration:
+                          type: string

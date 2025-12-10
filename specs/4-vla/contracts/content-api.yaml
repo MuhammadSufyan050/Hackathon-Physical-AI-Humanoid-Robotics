@@ -1,0 +1,171 @@
+# OpenAPI Specification: VLA Module Content API
+
+openapi: 3.0.0
+info:
+  title: Vision-Language-Action Module Content API
+  description: Educational content API for the VLA Module covering voice-to-action pipelines, LLM cognitive planning, and humanoid integration
+  version: 1.0.0
+
+paths:
+  /modules/vla/chapter-1:
+    get:
+      summary: Get Voice-to-Action Pipelines content
+      description: Retrieve educational content about voice processing using OpenAI Whisper and conversion to action sequences
+      responses:
+        '200':
+          description: Chapter content successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  chapter_title:
+                    type: string
+                    example: "Voice-to-Action Pipelines"
+                  content:
+                    type: string
+                    example: "This chapter covers voice processing using OpenAI Whisper and the conversion to action sequences..."
+                  examples:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          example: "Voice Processing Workflow"
+                        description:
+                          type: string
+                          example: "Example of voice command to action sequence"
+                  diagrams:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                          example: "Voice-to-Action Pipeline"
+                        description:
+                          type: string
+                          example: "Shows the flow from voice input to action execution"
+              example:
+                chapter_title: "Voice-to-Action Pipelines"
+                content: "This chapter covers voice processing using OpenAI Whisper and the conversion to action sequences..."
+                examples:
+                  - type: "Voice Processing Workflow"
+                    description: "Example of voice command 'Pick up the red block' to action sequence"
+                diagrams:
+                  - title: "Voice-to-Action Pipeline"
+                    description: "Shows the flow from voice input to action execution"
+
+  /modules/vla/chapter-2:
+    get:
+      summary: Get LLM Cognitive Planning content
+      description: Retrieve educational content about LLM-based cognitive planning and natural language to action conversion
+      responses:
+        '200':
+          description: Chapter content successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  chapter_title:
+                    type: string
+                    example: "LLM Cognitive Planning"
+                  content:
+                    type: string
+                    example: "This chapter covers how LLMs convert natural language into ROS 2 action sequences..."
+                  examples:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          example: "Language to Action Mapping"
+                        description:
+                          type: string
+                          example: "Example of natural language command to ROS 2 action sequence"
+                  diagrams:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                        description:
+                          type: string
+
+  /modules/vla/chapter-3:
+    get:
+      summary: Get Capstone Humanoid Project content
+      description: Retrieve educational content about the integrated humanoid project combining all VLA components
+      responses:
+        '200':
+          description: Chapter content successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  chapter_title:
+                    type: string
+                    example: "Capstone Humanoid Project"
+                  content:
+                    type: string
+                    example: "This chapter covers the integrated humanoid project combining voice, language, and action..."
+                  examples:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        description:
+                          type: string
+
+  /modules/vla/examples:
+    get:
+      summary: Get example configurations for the VLA module
+      description: Retrieve example configurations for voice processing, cognitive planning, and humanoid integration
+      responses:
+        '200':
+          description: Examples successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  voice_processing:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        description:
+                          type: string
+                        workflow:
+                          type: string
+                  cognitive_planning:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        description:
+                          type: string
+                        algorithm:
+                          type: string
+                  humanoid_integration:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        description:
+                          type: string
+                        integration_points:
+                          type: string
