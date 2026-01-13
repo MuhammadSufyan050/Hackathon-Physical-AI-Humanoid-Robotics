@@ -1,0 +1,95 @@
+openapi: 3.0.0
+info:
+  title: RAG Indexing API
+  description: API for indexing Docusaurus book content and retrieving relevant information
+  version: 1.0.0
+paths:
+  /index-book:
+    post:
+      summary: Index a Docusaurus book
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                  description: Base URL of the Docusaurus book to index
+                chunk_size:
+                  type: integer
+                  description: Size of text chunks (default: 1000)
+                  default: 1000
+                chunk_overlap:
+                  type: integer
+                  description: Overlap between chunks (default: 200)
+                  default: 200
+              required:
+                - url
+      responses:
+        '200':
+          description: Book indexing started successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "started"
+                  collection_name:
+                    type: string
+                    example: "rag_embedding"
+                  total_pages:
+                    type: integer
+                    example: 50
+        '400':
+          description: Invalid URL or other client error
+        '500':
+          description: Server error during indexing
+  /search:
+    post:
+      summary: Search indexed content
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: string
+                  description: Search query
+                top_k:
+                  type: integer
+                  description: Number of results to return (default: 5)
+                  default: 5
+              required:
+                - query
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        text:
+                          type: string
+                          description: Relevant text content
+                        url:
+                          type: string
+                          description: Source URL
+                        score:
+                          type: number
+                          description: Relevance score
+        '400':
+          description: Invalid query
+        '500':
+          description: Server error during search
