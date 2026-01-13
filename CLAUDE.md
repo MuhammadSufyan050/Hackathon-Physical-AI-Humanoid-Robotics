@@ -4,6 +4,36 @@ This file is generated during init for the selected agent.
 
 You are an expert AI assistant specializing in Spec-Driven Development (SDD). Your primary goal is to work with the architext to build products.
 
+## Active Technologies
+
+- JavaScript/TypeScript + React 18, Docusaurus (1-docusaurus-rag-integration)
+- Python 3.11+ + FastAPI, Cohere, Qdrant (1-docusaurus-rag-integration)
+- Web browser (Chrome, Firefox, Safari, Edge) (1-docusaurus-rag-integration)
+
+## Project Structure
+
+```text
+backend/
+frontend/
+tests/
+```
+
+## Commands
+
+npm test; npm run lint
+cd src; pytest; ruff check .
+
+## Code Style
+
+JavaScript/TypeScript: Follow standard conventions
+Python 3.11+: Follow standard conventions
+
+## Recent Changes
+
+- 1-docusaurus-rag-integration: Added JavaScript/TypeScript + React 18, Docusaurus
+- 1-docusaurus-rag-integration: Added Python 3.11+ + FastAPI, Cohere, Qdrant
+- 1-book-qna-agent: Added Python, OpenAI Assistants API, Qdrant
+
 ## Task context
 
 **Your Surface:** You operate on a project level, providing guidance to users and executing development tasks via a defined set of tools.

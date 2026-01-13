@@ -1,0 +1,263 @@
+openapi: 3.0.0
+info:
+  title: Qdrant Retrieval Validation API
+  description: API for validating Qdrant retrieval pipeline for book-focused RAG system
+  version: 1.0.0
+
+paths:
+  /api/v1/validate/connection:
+    get:
+      summary: Test connection to Qdrant Cloud
+      description: Verify that the system can connect to Qdrant Cloud successfully
+      responses:
+        '200':
+          description: Connection successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Successfully connected to Qdrant Cloud"
+                  response_time_ms:
+                    type: number
+                    example: 150
+        '500':
+          description: Connection failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: "Failed to connect to Qdrant Cloud"
+
+  /api/v1/validate/query:
+    post:
+      summary: Validate a single query against Qdrant
+      description: Execute a query against Qdrant and return validation metrics
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - query
+              properties:
+                query:
+                  type: string
+                  description: The query text to validate
+                  example: "What is ROS2?"
+                top_k:
+                  type: integer
+                  description: Number of results to retrieve (default: 5)
+                  example: 5
+                validate_embedding:
+                  type: boolean
+                  description: Whether to validate embedding consistency (default: true)
+                  example: true
+      responses:
+        '200':
+          description: Query executed and validated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  query_id:
+                    type: string
+                    example: "query-123"
+                  original_query:
+                    type: string
+                    example: "What is ROS2?"
+                  retrieved_chunks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TextChunk'
+                  validation_result:
+                    $ref: '#/components/schemas/ValidationResult'
+                  retrieval_time_ms:
+                    type: number
+                    example: 1200
+        '400':
+          description: Invalid query parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Query text is required"
+        '500':
+          description: Query execution failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Failed to execute query against Qdrant"
+
+  /api/v1/validate/batch:
+    post:
+      summary: Run batch validation
+      description: Execute multiple test queries and return comprehensive validation report
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                queries:
+                  type: array
+                  items:
+                    type: string
+                  description: List of query strings to validate
+                  example: ["What is ROS2?", "Explain Gazebo simulation", "How to use Isaac Sim?"]
+                top_k:
+                  type: integer
+                  description: Number of results to retrieve for each query (default: 5)
+                  example: 5
+                validation_config:
+                  $ref: '#/components/schemas/ValidationConfig'
+      responses:
+        '200':
+          description: Batch validation completed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  batch_id:
+                    type: string
+                    example: "batch-456"
+                  total_queries:
+                    type: integer
+                    example: 3
+                  completed_queries:
+                    type: integer
+                    example: 3
+                  overall_metrics:
+                    $ref: '#/components/schemas/OverallMetrics'
+                  detailed_results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/QueryValidationResult'
+                  execution_time_ms:
+                    type: number
+                    example: 5400
+
+components:
+  schemas:
+    TextChunk:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "chunk-789"
+        content:
+          type: string
+          example: "ROS2 (Robot Operating System 2) is a flexible framework for writing robot software..."
+        similarity_score:
+          type: number
+          format: float
+          example: 0.87
+        metadata:
+          type: object
+          properties:
+            url:
+              type: string
+              example: "https://example.com/ros2-introduction"
+            page_title:
+              type: string
+              example: "Introduction to ROS2"
+            section:
+              type: string
+              example: "What is ROS2?"
+            source_file:
+              type: string
+              example: "chapter_3_ros2_fundamentals.md"
+
+    ValidationResult:
+      type: object
+      properties:
+        precision_at_k:
+          type: number
+          format: float
+          example: 0.85
+        recall_at_k:
+          type: number
+          format: float
+          example: 0.78
+        relevance_score:
+          type: number
+          format: float
+          example: 0.82
+        semantic_alignment:
+          type: number
+          format: float
+          example: 0.84
+        metadata_accuracy:
+          type: boolean
+          example: true
+
+    ValidationConfig:
+      type: object
+      properties:
+        top_k:
+          type: integer
+          example: 5
+        validation_threshold:
+          type: number
+          format: float
+          example: 0.7
+        max_retries:
+          type: integer
+          example: 3
+
+    OverallMetrics:
+      type: object
+      properties:
+        connection_success_rate:
+          type: number
+          format: float
+          example: 0.99
+        avg_query_time_ms:
+          type: number
+          format: float
+          example: 1200.5
+        avg_semantic_alignment:
+          type: number
+          format: float
+          example: 0.82
+        metadata_accuracy_rate:
+          type: number
+          format: float
+          example: 1.0
+        pipeline_stability:
+          type: string
+          example: "consistent"
+
+    QueryValidationResult:
+      type: object
+      properties:
+        query:
+          type: string
+          example: "What is ROS2?"
+        validation_result:
+          $ref: '#/components/schemas/ValidationResult'
+        retrieved_count:
+          type: integer
+          example: 5
